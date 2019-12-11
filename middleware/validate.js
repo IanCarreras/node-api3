@@ -1,4 +1,5 @@
 const users = require('../users/userDb')
+const posts = require('../posts/postDb')
 
 function validateUserId() {
     return (req, res, next) => {
