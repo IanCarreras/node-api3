@@ -1,14 +1,17 @@
 const express = require('express');
 const helmet = require('helmet')
 const logger = require('./middleware/logger')
+const validate = require('./middleware/validate')
 const server = express()
-const userRouter = require('./users/userRouter')
 
+const userRouter = require('./users/userRouter')
+const postRouter = require('./posts/postRouter')
 server.use(helmet())
 server.use(logger())
 server.use(express.json())
 
 server.use('/api/users', userRouter)
+server.use('/api/posts', postRouter)
 
 server.use((req, res) => {
     res.status(404).json({
@@ -22,9 +25,5 @@ server.use((err, req, res, next) => {
         message: err.message
     })
 })
-
-server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
-});
 
 module.exports = server;

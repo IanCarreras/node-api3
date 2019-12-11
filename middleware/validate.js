@@ -1,3 +1,5 @@
+const users = require('../users/userDb')
+
 function validateUserId() {
     return (req, res, next) => {
         users.getById(req.params.id)
@@ -9,9 +11,7 @@ function validateUserId() {
                   
                 res.status(400).json({ message: 'invalid user id'})
             })
-            .catch(err => {
-                res.status(500).json({ message: 'there was an error retrieving the user'})
-            })
+            .catch(err => next(err))
     }
 }
 
@@ -37,8 +37,24 @@ function validatePost() {
     }
 }
 
+function validatePostId() {
+    return (req, res, next) => {
+        posts.getById(req.params.id)
+            .then(post => {
+                if (post) {
+                    req.post = post
+                    next()
+                } else {
+                    res.status(404).json({ message: 'invalid id'})
+                }
+            })
+            .catch(err => next(err))
+    }
+}
+
 module.exports = {
     validateUserId,
     validateUser,
-    validatePost
+    validatePost,
+    validatePostId
 }
